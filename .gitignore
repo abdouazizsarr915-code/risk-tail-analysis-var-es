@@ -1,0 +1,22 @@
+# R
+.Rhistory
+.RData
+.Rproj.user/
+
+# Mac / Windows
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# LaTeX
+*.aux
+*.out
+*.toc
+
+# Data brute lourde (optionnel)
+data/raw/*.csv
+
+# RMarkdown cache
+*_cache/

@@ -1,21 +1,18 @@
-# Risk Modeling of S&P 500 Returns: VaR, Expected Shortfall and Tail Behavior
+# Managing Tail Risk in Equity Markets: Beyond Gaussian Assumptions
 
-A quantitative risk analysis project focused on tail risk, distributional assumptions, and model validation using Value-at-Risk (VaR) and Expected Shortfall (ES).
+A quantitative risk analysis project comparing Normal and Laplace distribution assumptions for Value-at-Risk (VaR) and Expected Shortfall (ES), with empirical benchmarking and backtesting on S&P 500 returns.
 
 ---
 
 ## Overview
 
-Financial returns exhibit non-normal behavior, particularly in the tails, where extreme losses occur more frequently than predicted by Gaussian models.
+Financial returns are well-known to deviate from Gaussian assumptions, particularly in the tails where extreme losses occur more frequently than predicted by standard models.
 
-This project develops a structured framework to:
+This project investigates how distributional assumptions impact risk estimation by addressing the following question:
 
-* model return distributions,
-* estimate risk measures (VaR and Expected Shortfall),
-* compare parametric and empirical approaches,
-* and evaluate model performance through backtesting.
+> *How does replacing the Normal distribution with a heavy-tailed alternative affect the measurement and validation of financial risk?*
 
-The analysis focuses on daily S&P 500 returns and highlights the importance of correctly modeling tail behavior in risk management.
+To answer this, the analysis combines parametric modeling, empirical benchmarks, and backtesting procedures within a structured risk management framework.
 
 ---
 
@@ -24,7 +21,7 @@ The analysis focuses on daily S&P 500 returns and highlights the importance of c
 * Source: Yahoo Finance (S&P 500 index)
 * Frequency: Daily
 * Period: 2013–2018
-* Variable of interest: log returns
+* Variable: Log returns
 
 ---
 
@@ -32,46 +29,44 @@ The analysis focuses on daily S&P 500 returns and highlights the importance of c
 
 ### Distribution Modeling
 
-Two parametric models are considered:
+Three approaches are considered:
 
-* Normal distribution (baseline assumption)
-* Laplace distribution (heavy-tailed alternative)
-
-The Laplace distribution allows for excess kurtosis and better captures extreme observations in the data.
+* **Normal distribution**: baseline model with thin tails
+* **Laplace distribution**: heavy-tailed alternative capturing excess kurtosis
+* **Empirical distribution**: non-parametric benchmark derived directly from data
 
 ---
 
 ### Risk Measures
 
-The following risk metrics are computed:
+Two standard risk metrics are evaluated:
 
-* Value-at-Risk (VaR)
-* Expected Shortfall (ES)
+* **Value-at-Risk (VaR)**: quantile-based loss threshold
+* **Expected Shortfall (ES)**: average loss beyond the VaR threshold
 
-Each metric is evaluated under three approaches:
-
-* Normal model
-* Laplace model
-* Empirical (non-parametric benchmark)
+Each metric is computed under all three distributional assumptions.
 
 ---
 
-### Backtesting
+### Backtesting Framework
 
 Model performance is evaluated by comparing:
 
 * expected exceedance rates (theoretical)
 * observed exceedance rates (empirical)
 
-This allows us to assess whether the models underestimate or overestimate risk.
+This provides a direct assessment of how well each model captures extreme losses.
 
 ---
 
-### Volatility Analysis
+### Volatility Diagnostics
 
-Squared returns are used as a proxy for volatility.
+Squared returns are analyzed to detect:
 
-The presence of volatility clustering indicates that returns are not independent over time, which challenges the i.i.d. assumption and motivates more advanced models.
+* volatility clustering
+* dependence structures
+
+This challenges the i.i.d. assumption and motivates extensions toward volatility models.
 
 ---
 
@@ -81,7 +76,7 @@ The presence of volatility clustering indicates that returns are not independent
 
 ![Distribution Fit](figures/main/03_distribution_fit.png)
 
-The Laplace distribution provides a better fit in the tails compared to the Normal model, highlighting the importance of accounting for extreme events.
+The Laplace distribution better captures the peaked center and heavier tails observed in financial returns compared to the Normal model.
 
 ---
 
@@ -89,15 +84,16 @@ The Laplace distribution provides a better fit in the tails compared to the Norm
 
 ![Left Tail Comparison](figures/main/04_left_tail_fit.png)
 
-The left tail of the distribution is particularly relevant for risk management, as it captures large negative returns.
+The left tail (extreme negative returns) is more pronounced than predicted by Gaussian assumptions, highlighting the importance of heavy-tailed modeling.
 
 ---
 
-### VaR Analysis
+### VaR Comparison
 
 ![VaR Curves](figures/main/05_var_curves.png)
 
-The Laplace-based VaR is consistently more conservative than the Normal-based VaR, while the empirical VaR provides a reference benchmark.
+VaR estimates differ across models, with heavier-tailed assumptions generally producing more conservative risk estimates.
+The empirical VaR serves as a reference for model validation.
 
 ---
 
@@ -105,19 +101,18 @@ The Laplace-based VaR is consistently more conservative than the Normal-based Va
 
 ![Expected Shortfall](figures/main/06_es_curves.png)
 
-Expected Shortfall further emphasizes tail risk by measuring average losses beyond the VaR threshold.
+Expected Shortfall amplifies differences between models, as it accounts for the full tail beyond the VaR threshold.
 
 ---
 
-### Backtesting
+### Backtesting Results
 
 ![VaR Backtesting](figures/main/07_var_backtesting.png)
 
 ![Exceedance Rates](figures/main/07b_exceedance_rates.png)
 
-Observed exceedance rates deviate from theoretical expectations, indicating model risk.
-
-The Normal model tends to underestimate extreme losses, while the Laplace model provides a more conservative estimate.
+Observed exceedance rates deviate from theoretical expectations, particularly under the Normal model, indicating potential underestimation of tail risk.
+The Laplace model produces more conservative exceedance behavior, closer to empirical observations.
 
 ---
 
@@ -125,18 +120,18 @@ The Normal model tends to underestimate extreme losses, while the Laplace model 
 
 ![Squared Returns](figures/main/08_squared_returns.png)
 
-The clustering of large squared returns suggests time-varying volatility and dependence in the data.
+Periods of high volatility tend to cluster, suggesting that returns are not independent and that time-varying volatility should be considered.
 
 ---
 
 ## Key Insights
 
-* Financial returns exhibit heavy tails and are not well described by a Normal distribution
-* Tail risk is underestimated under Gaussian assumptions
-* Laplace distribution provides a better fit for extreme events
-* Empirical VaR highlights discrepancies between model-based estimates and observed data
-* Backtesting reveals deviations between expected and observed exceedances
-* Volatility clustering indicates that returns are not independent
+* Financial returns exhibit heavy tails not captured by the Normal distribution
+* Parametric assumptions significantly impact risk estimates
+* Laplace-based models provide more conservative tail risk assessments
+* Empirical benchmarks are essential for validating model-based estimates
+* Backtesting reveals discrepancies between theoretical and observed risk
+* Volatility clustering indicates the need for dynamic volatility models
 
 ---
 
@@ -146,10 +141,11 @@ The clustering of large squared returns suggests time-varying volatility and dep
 * Libraries: quantmod, ggplot2, dplyr, tseries
 * Methods:
 
-  * Maximum likelihood estimation
-  * Method of moments
+  * Maximum Likelihood Estimation (MLE)
+  * Method of Moments
   * Non-parametric estimation
   * Backtesting procedures
+  * Autocorrelation analysis
 
 ---
 
@@ -161,7 +157,7 @@ To reproduce the full analysis:
 source("scripts/09_run_project.R")
 ```
 
-All figures and processed data will be generated automatically.
+All outputs (figures and processed data) are generated automatically.
 
 ---
 
@@ -171,31 +167,39 @@ All figures and processed data will be generated automatically.
 .
 ├── README.md
 ├── data/
+│   ├── raw/         # Ignored (large input data)
+│   └── processed/   # Cleaned datasets used in analysis
 ├── figures/
-│   ├── main/
-│   └── diagnostics/
+│   ├── main/        # Final figures
+│   └── diagnostics/ # Intermediate analysis
 └── scripts/
+    ├── 01_load_data.R
+    ├── 02_fit_distributions.R
+    ├── 03_var_es_analysis.R
+    ├── 04_backtesting.R
+    └── 09_run_project.R
 ```
 
 ---
 
 ## Conclusion
 
-This project demonstrates the importance of modeling tail risk accurately in financial applications.
+This project highlights the sensitivity of financial risk measures to distributional assumptions.
 
-While simple parametric models are useful, they can lead to significant underestimation of extreme losses if distributional assumptions are not carefully validated.
+While the Normal model provides a convenient baseline, it tends to underestimate tail risk.
+Heavy-tailed alternatives such as the Laplace distribution offer a simple yet more robust framework for capturing extreme market behavior.
 
-Combining parametric, empirical, and backtesting approaches provides a more robust framework for risk assessment.
+Combining parametric models, empirical benchmarks, and backtesting leads to a more reliable assessment of financial risk.
 
 ---
 
 ## Extensions
 
-Potential extensions include:
+Potential improvements include:
 
 * GARCH-based volatility modeling
-* Extreme Value Theory (EVT)
-* Multivariate risk modeling
-* Portfolio-level risk aggregation
+* Extreme Value Theory (EVT) for tail estimation
+* Rolling-window risk estimation
+* Multivariate risk modeling for portfolios
 
 ---
